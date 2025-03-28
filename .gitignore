@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+db.sqlite3
+/media
+/staticfiles
+
+# If using MySQL
+*.pem
+
+# If using PostgreSQL
+*.pgsql
+*.pg_dump
+
+# Ignore environment variables
+.env
+*.env
+
+# Virtual environments
+venv/
+.env/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Migrations (optional, if you want to exclude them from version control)
+**/migrations/*.pyc
+**/migrations/*.pyo
+**/migrations/__pycache__/
+
+# Ignore compiled translations
+*.mo

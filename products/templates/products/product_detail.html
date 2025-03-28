@@ -1,0 +1,51 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if product.photo_url %}
+        <img src="{{ product.photo_url }}" class="img-fluid rounded mb-4" alt="{{ product.name }}">
+        {% else %}
+        <div class="alert alert-warning">No product image available</div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1>{{ product.name }}</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Product Details</h5>
+                <p><strong>Price:</strong> €{{ product.price|floatformat:2 }}</p>
+                <p><strong>Supplier:</strong> {{ product.supplier }}</p>
+                
+                {% if product.supplier_url %}
+                <p>
+                    <strong>Supplier URL:</strong> 
+                    <a href="{{ product.supplier_url }}" target="_blank">{{ product.supplier_url }}</a>
+                </p>
+                {% endif %}
+                
+                <p><strong>Original Product URL:</strong> 
+                    <a href="{{ product.product_url }}" target="_blank">{{ product.product_url }}</a>
+                </p>
+                
+                <p><strong>Added:</strong> {{ product.timestamp }}</p>
+            </div>
+        </div>
+        
+        {% if product.description %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Description</h5>
+                <p>{{ product.description }}</p>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="mt-3">
+            <a href="{% url 'product_list' %}" class="btn btn-secondary">Back to List</a>
+            <a href="{% url 'delete_product' product.pk %}" class="btn btn-danger">Delete Product</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

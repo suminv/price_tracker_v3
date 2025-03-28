@@ -1,0 +1,91 @@
+{% extends 'products/base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+
+
+<div class="row">
+    <div class="col-12">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center my-4">
+            <h1>Unique Parsed Products</h1>
+        </div>
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4">
+                <div class="product-card">
+                    {% if product.photo_url %}
+                    <img src="{{ product.photo_url }}" class="product-image" alt="{{ product.name }}">
+                    {% else %}
+                    <div class="product-no-image">
+                        <span class="text-muted">No Image Available</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">
+                            <strong>Current Price:</strong> €{{ product.price|floatformat:2 }}<br>
+                            <strong>Minimum Price:</strong> €{{ product.min_price|floatformat:2 }}<br>
+                            <strong>Maximum Price:</strong> €{{ product.max_price|floatformat:2 }}<br>
+                            <strong>First Added:</strong> {{ product.first_added }}<br>
+                            <strong>Last Updated:</strong> {{ product.last_added }}<br>
+                            <strong>Supplier:</strong> {{ product.supplier|default:"N/A" }}
+                        </p>
+                        <div class="btn-container">
+                            <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary">View Details</a>
+                            <a href="{% url 'delete_product' product.pk %}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="alert alert-info">No products found. Add a product to get started!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
