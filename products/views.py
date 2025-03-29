@@ -1,4 +1,4 @@
-from django.core.paginator import Paginator
+from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView, ListView
@@ -62,9 +62,25 @@ def add_product(request):
         form = ProductUrlForm(request.POST)
         if form.is_valid():
             url = form.cleaned_data['url']
+
+            # Check if the URL is already in the database
+            existing_product = Product.objects.filter(product_url=url).first()
+            
+            if existing_product:
+                # Redirect to the existing product detail page
+                form.add_error('url', 'A product with this URL already exists in the database.')
+                
+                # Adde link to the existing product
+                return render(request, 'products/add_product.html', {
+                    'form': form,
+                    'existing_product': existing_product
+                })
+            
+            # If not, save the new product data
             try:
                 product, created = save_product_data(url)
                 if created:
+                    messages.success(request, 'Product added successfully!')
                     return redirect('product_detail', pk=product.pk)
                 else:
                     # Handle case where product might already exist
@@ -76,6 +92,8 @@ def add_product(request):
         form = ProductUrlForm()
     
     return render(request, 'products/add_product.html', {'form': form})
+
+
 
 def delete_product(request, pk):
     """
