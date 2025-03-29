@@ -36,7 +36,13 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">
-                            <strong>Current Price:</strong> €{{ product.price|floatformat:2 }}<br>
+                            <strong>Current Price:</strong> 
+                            <span style="{% if product.price <= product.min_price %}color: green;{% elif product.price >= product.max_price %}color: red;{% endif %}">
+                            €{{ product.price|floatformat:2 }}
+                            </span>
+                            <br>
+                            
+                            {% comment %} {{ product.price|floatformat:2 }}<br> {% endcomment %}
                             <strong>Minimum Price:</strong> €{{ product.min_price|floatformat:2 }}<br>
                             <strong>Maximum Price:</strong> €{{ product.max_price|floatformat:2 }}<br>
                             <strong>First Added:</strong> {{ product.first_added }}<br>

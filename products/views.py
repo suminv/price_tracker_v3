@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView, ListView
@@ -14,7 +15,7 @@ class ProductListView(ListView):
     model = Product
     template_name = 'products/product_list.html'
     context_object_name = 'products'
-    paginate_by = 10
+    paginate_by = 9
 
     def get_queryset(self):
         # Retrieve all products
@@ -43,9 +44,10 @@ class ProductListView(ListView):
                 
                 unique_products[key] = product
         
-        return list(unique_products.values())
-
-
+        # return list(unique_products.values())
+        # Sort the unique products by name ASC
+        return sorted(unique_products.values(), key=lambda p: p.name)
+    
 
 class ProductDetailView(DetailView):
     model = Product
