@@ -38,7 +38,9 @@ Thumbs.db
 # Migrations (optional, if you want to exclude them from version control)
 **/migrations/*.pyc
 **/migrations/*.pyo
+**/migrations/*.py
 **/migrations/__pycache__/
+
 
 # Ignore compiled translations
 *.mo

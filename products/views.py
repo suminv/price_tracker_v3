@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
@@ -6,7 +8,7 @@ from django.db.models import Max, Min
 
 from products.forms import ProductUrlForm
 from products.utils import get_link_data, save_product_data
-from .models import Product
+from .models import Product, PriceHistory
 
 
 class ProductListView(ListView):
@@ -51,6 +53,29 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'products/product_detail.html'
     context_object_name = 'product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        price_history = PriceHistory.objects.filter(product__product_url=product.product_url) # Фильтруем по product_url
+
+        print(f"Price history count: {price_history.count()}")
+
+        labels = []
+        prices = []
+
+        if not price_history:
+            labels = [product.timestamp.strftime('%d.%m.%Y')]
+            prices = [float(product.price)]
+        else:
+            for history in reversed(list(price_history)):
+                labels.append(history.timestamp.strftime('%d.%m.%Y'))
+                prices.append(float(history.price))
+
+        context['price_history_labels'] = json.dumps(labels)
+        context['price_history_data'] = json.dumps(prices)
+
+        return context
 
 
 def add_product(request):
