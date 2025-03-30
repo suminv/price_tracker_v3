@@ -1,5 +1,5 @@
 from products.models import Product, PriceHistory
-from django.utils import timezone
+
 
 products = Product.objects.all()
 
