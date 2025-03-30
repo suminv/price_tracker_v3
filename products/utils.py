@@ -86,62 +86,6 @@ def get_link_data(url):
 
     return name, price, photo_url, base_url, supplier, supplier_url, description
 
-# def get_link_data(url):
-    """
-    Gets the product data from the link.
-    :param url: product URL
-    :return: tuple with product data (title, price, photo, base URL, supplier, supplier URL, description)
-    """
-    
-    if url is None:
-        return None, 0.0, None, None, None, None, None
-
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) "
-        "Version/16.1 Safari/605.1.15",
-        "Accept-Language": "en-GB,en;q=0.9",
-    }
-
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    if soup:
-        base_url = url
-
-
-        img_tag = soup.select_one('div.gallery-trigger img')
-        photo_url = img_tag['src'] if img_tag else None
-
-        product_name_block = soup.find("h1", class_="line-clamp").get_text(strip=True)
-        name = product_name_block if product_name_block else None
-
-        price = 0.0
-        price_tag = soup.find("span", class_="lowest-price")
-        if price_tag:
-            price_text = price_tag.get_text(strip=True)
-            try:
-                price = float(format_price(price_text))
-            except ValueError:
-                price = 0.0
-
-        supplier_block = soup.find("span", class_="ellipsis").get_text(strip=True)
-        supplier = supplier_block if supplier_block else None
-
-        supplier_block_url = soup.find("a", class_="price").get('href')
-        supplier_url = supplier_block_url if supplier_block_url else None
-
-        all_specs = soup.find_all("div", class_="spec-content spec-line")
-        for spec in all_specs:
-            description_block = spec.find("a", class_="line-clamp")
-
-            description = description_block.get_text(strip=True) if description_block else None
-
-        return name, price, photo_url, base_url, supplier, supplier_url, description
-
-    return None, 0.0, None, None, None, None, None
-
-
 
 def save_product_data(url):
     """Saves the product data to the database."""
