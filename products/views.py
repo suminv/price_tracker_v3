@@ -57,7 +57,7 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-        price_history = PriceHistory.objects.filter(product__product_url=product.product_url) # Фильтруем по product_url
+        price_history = Product.objects.filter(product_url=product.product_url) # Фильтруем по product_url
 
         print(f"Price history count: {price_history.count()}")
 
@@ -68,7 +68,7 @@ class ProductDetailView(DetailView):
             labels = [product.timestamp.strftime('%d.%m.%Y')]
             prices = [float(product.price)]
         else:
-            for history in reversed(list(price_history)):
+            for history in (list(price_history)):
                 labels.append(history.timestamp.strftime('%d.%m.%Y'))
                 prices.append(float(history.price))
 

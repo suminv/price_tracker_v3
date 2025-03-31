@@ -15,7 +15,7 @@ class Product(models.Model):
         return f"{self.name} - {self.price}€"
 
 
-# models.py
+
 class PriceHistory(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='price_history')
     price = models.FloatField()
@@ -23,5 +23,5 @@ class PriceHistory(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
-        verbose_name = 'История цены'
-        verbose_name_plural = 'История цен'
+        verbose_name = 'Price history'
+        verbose_name_plural = 'Price history'
