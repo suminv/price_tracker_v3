@@ -13,4 +13,4 @@ for product in products:
     else:
         print(f"Skipping product {product.product_url} because price is None.")
 
-print("Данные успешно перенесены в таблицу PriceHistory.")
+print("The data has been successfully transferred to the table PriceHistory.")

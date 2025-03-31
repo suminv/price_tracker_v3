@@ -8,10 +8,8 @@ from .models import Product, PriceHistory
 def save_price_history(sender, instance, **kwargs):
     if instance.pk:  # Только для существующих продуктов (не для новых)
         try:
-            # Получаем старую версию продукта из базы данных
             old_instance = Product.objects.get(pk=instance.pk)
 
-            # Если цена изменилась, создаем новую запись в истории
             if old_instance.price != instance.price:
                 PriceHistory.objects.create(
                     product=instance,

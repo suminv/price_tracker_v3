@@ -12,16 +12,10 @@ def format_price(price_text):
     :return: formatted price as float
     """
 
-    # Удаляем евро, дефис, неразрывный пробел
     price_text = price_text.replace('€', '').replace('-', '').replace('\xa0', '').strip()
-
-    # Удаляем точки-разделители тысяч
     price_text = price_text.replace('.', '')
-
-    # Заменяем запятую на точку
     price_text = price_text.replace(',', '.')
 
-    # Удаляем точку в конце, если она одна и последняя
     if price_text.count('.') == 1 and price_text.endswith('.'):
         price_text = price_text[:-1]
 
@@ -30,9 +24,9 @@ def format_price(price_text):
 
 def get_link_data(url):
     """
-    Получает данные о продукте по ссылке.
-    :param url: URL продукта
-    :return: кортеж с данными о продукте (название, цена, фото, базовый URL, поставщик, URL поставщика, описание)
+    Gets product data from a link.
+    param url: product URL
+    return: tuple with product data (name, price, photo, base URL, supplier, supplier URL, description)
     """
     if not url:
         return "", None, "", "", "", "", ""
@@ -53,36 +47,30 @@ def get_link_data(url):
 
     base_url = url
 
-    # Изображение товара
     img_tag = soup.select_one("div.gallery-trigger img")
     photo_url = img_tag["src"] if img_tag and img_tag.has_attr("src") else ""
 
-    # Название товара
     name_block = soup.find("h1", class_="line-clamp")
     name = name_block.get_text(strip=True) if name_block else ""
 
-    # Цена
     price = None
     price_tag = soup.find("span", class_="lowest-price")
     if price_tag:
         price = format_price(price_tag.get_text(strip=True))
 
-    # Поставщик
     supplier_block = soup.find("span", class_="ellipsis")
     supplier = supplier_block.get_text(strip=True) if supplier_block else ""
 
-    # Ссылка на поставщика
     supplier_block_url = soup.find("a", class_="price")
     supplier_url = supplier_block_url["href"] if supplier_block_url and supplier_block_url.has_attr("href") else ""
 
-    # Описание
     description = ""
     all_specs = soup.find_all("div", class_="spec-content spec-line")
     for spec in all_specs:
         description_block = spec.find("a", class_="line-clamp")
         if description_block:
             description = description_block.get_text(strip=True)
-            break  # Берем первое найденное описание и выходим
+            break  
 
     return name, price, photo_url, base_url, supplier, supplier_url, description
 
@@ -92,7 +80,6 @@ def save_product_data(url):
     
     data = get_link_data(url)
 
-    # Создаем новый объект с актуальными данными
     product = Product.objects.create(
         name=data[0],
         price=data[1],
@@ -121,8 +108,7 @@ def update_all_product_data():
     for url in all_urls:
         name, price, photo_url, _, supplier, supplier_url, description = get_link_data(url)
 
-        # Создаем новую запись для каждого парсинга
-        with transaction.atomic():  # Обеспечиваем атомарность транзакции
+        with transaction.atomic():
             Product.objects.create(
                 product_url=url,
                 name=name,
@@ -143,20 +129,10 @@ def delete_products_by_url(url):
     :return: None
     """
 
-    # Находим все записи с данным URL и удаляем их
     products_to_delete = Product.objects.filter(product_url=url)
     
-    # Если есть записи с данным URL, удаляем их
     if products_to_delete.exists():
         products_to_delete.delete()
         print(f"All product from URL: {url} deleted.")
     else:
         print(f"Product from URL: {url} not found.")
-
-
-
-# print(get_link_data('https://tweakers.net/pricewatch/2108170/benq-ma270u-zilver.html'))
-# print(get_link_data('https://tweakers.net/pricewatch/2108172/benq-ma320u-zilver.html'))
-# print(get_link_data('https://tweakers.net/pricewatch/2158582/dell-ultrasharp-u3225qe-zwart.html'))
-
-# https://tweakers.net/pricewatch/2182528/apple-mac-studio-2025-m4-max-14-core-36gb-ram-32-core-gpu-512gb-ssd.html
