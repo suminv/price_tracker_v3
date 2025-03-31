@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Цена (€)',
+                    label: 'Price (€)',
                     data: prices,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
@@ -35,13 +35,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         beginAtZero: false,
                         title: {
                             display: true,
-                            text: 'Цена (€)'
+                            text: 'Price (€)'
                         }
                     },
                     x: {
                         title: {
                             display: true,
-                            text: 'Дата'
+                            text: 'Date'
                         }
                     }
                 },

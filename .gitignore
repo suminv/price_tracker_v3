@@ -44,3 +44,6 @@ Thumbs.db
 
 # Ignore compiled translations
 *.mo
+
+
+*.sqlite3-query
