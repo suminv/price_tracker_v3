@@ -47,3 +47,5 @@ Thumbs.db
 
 
 *.sqlite3-query
+
+migration_from_v2_to_v3/

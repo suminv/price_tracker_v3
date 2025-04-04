@@ -1,8 +1,22 @@
 from bs4 import BeautifulSoup
 import requests
+import random
 from django.db import transaction
 from products.models import Product
+from fake_useragent import UserAgent
 
+
+
+
+def get_random_user_agent():
+    """
+    Returns a random user agent string using fake_useragent.
+    :return: random user agent string
+    """
+    ua = UserAgent()
+    return ua.random
+
+print(get_random_user_agent())
 
 
 def format_price(price_text):
@@ -32,12 +46,16 @@ def get_link_data(url):
         return "", None, "", "", "", "", ""
 
     headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) "
-        "Version/16.1 Safari/605.1.15",
-        "Accept-Language": "en-GB,en;q=0.9",
-    }
+        # "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) "
+        # "Version/16.1 Safari/605.1.15",
+        "User-Agent": get_random_user_agent(),
 
-    response = requests.get(url, headers=headers)
+        "Accept-Language": "en-GB,en;q=0.9",
+        "Referer": "https://www.google.com/"
+    }
+    
+    session = requests.Session()
+    response = session.get(url, headers=headers, timeout=15)
     if response.status_code != 200:
         return "", None, "", "", "", "", ""
 
@@ -136,3 +154,4 @@ def delete_products_by_url(url):
         print(f"All product from URL: {url} deleted.")
     else:
         print(f"Product from URL: {url} not found.")
+

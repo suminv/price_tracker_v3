@@ -89,4 +89,6 @@ The application uses Django's MVT (Model-View-Template) architecture:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+This project is licensed under the [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
