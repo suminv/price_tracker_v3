@@ -22,14 +22,13 @@ The application uses Django's MVT (Model-View-Template) architecture:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/price-tracker.git
-   cd price-tracker
+   git clone https://github.com/suminv/price_tracker_v3.git
    ```
 
 2. Create and activate a virtual environment:
    ```bash
    python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate 
    ```
 
 3. Install dependencies:
