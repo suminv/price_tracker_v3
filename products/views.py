@@ -56,11 +56,14 @@ class ProductDetailView(DetailView):
 
         if not price_history:
             labels = [product.timestamp.strftime('%d.%m.%Y')]
-            prices = [float(product.price)]
+            prices = [float(product.price)] if product.price is not None else [0.0]
         else:
             for history in (list(price_history)):
                 labels.append(history.timestamp.strftime('%d.%m.%Y'))
-                prices.append(float(history.price))
+                if history.price is not None:
+                    prices.append(float(history.price))
+                else:
+                    prices.append(0.0)
 
         context['price_history_labels'] = json.dumps(labels)
         context['price_history_data'] = json.dumps(prices)
