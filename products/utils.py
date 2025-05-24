@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import random
 from django.db import transaction
 from products.models import Product
 from fake_useragent import UserAgent
@@ -46,8 +45,7 @@ def get_link_data(url):
         return "", None, "", "", "", "", ""
 
     headers = {
-        # "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) "
-        # "Version/16.1 Safari/605.1.15",
+        
         "User-Agent": get_random_user_agent(),
 
         "Accept-Language": "en-GB,en;q=0.9",
@@ -137,7 +135,7 @@ def update_all_product_data():
                 description=description,
             )
 
-            print(f"Added new product from URL: {url}")
+            print(f"Updated product from URL: {url}")
 
 
 def delete_products_by_url(url):
