@@ -1,0 +1,36 @@
+{% extends 'products/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>Searching result</h1>
+
+    {% if query %}
+        <p>You search: "<strong>{{ query }}</strong>"</p>
+    {% endif %}
+
+    {% if products %}
+        <ul>
+            {% for product in products %}
+            <li>
+        <a href="{{ product.product_url }}" target="_blank" rel="noopener noreferrer">{{ product.name }} - {{ product.price }} €. </a> 
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Items not found.</p>
+    {% endif %}
+
+    <div class="mt-3" style="margin-bottom: 20px;">
+            <a href="{% url 'product_list' %}" class="btn btn-secondary">Back to List</a>
+            
+        </div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/price_history_chart.js' %}"></script>
+{% endblock %}

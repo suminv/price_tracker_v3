@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView, ListView
-from django.db.models import Max, Min
+from django.db.models import Q, Max, Min
 
 from products.forms import ProductUrlForm
 from products.utils import get_link_data, save_product_data
@@ -175,3 +175,46 @@ def update_product(request):
         messages.error(request, f'An error occurred while updating products: {str(e)}')
 
         return redirect('product_list')
+
+
+def search_results(request):
+    query = request.GET.get('q') 
+    
+    if query:
+        # 1. Получаем все товары, которые соответствуют поисковому запросу
+        # Отсортируем их по дате создания (или по ID) для детерминированного выбора дубликата
+        # Например, если вам нужна самая свежая запись, сортируйте по '-created_at'
+        # Если такого поля нет, можно сортировать по ID: .order_by('id')
+        products_raw = Product.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        ).order_by('id') # Отсортируем по ID, чтобы выбор дубликата был предсказуемым (первая найденная)
+        
+        # 2. Удаление дубликатов по наименованию на уровне Python
+        seen_names = set()
+        unique_products = []
+        
+        for product in products_raw:
+            if product.name not in seen_names:
+                unique_products.append(product)
+                seen_names.add(product.name)
+        
+        products = unique_products 
+    else:
+        # Если запрос пустой, можно показать все уникальные товары или ничего
+        # Если вы хотите показать все уникальные товары, но только по одному экземпляру имени:
+        all_products_raw = Product.objects.all().order_by('id')
+        seen_names = set()
+        unique_products = []
+        for product in all_products_raw:
+            if product.name not in seen_names:
+                unique_products.append(product)
+                seen_names.add(product.name)
+        products = unique_products
+        # Или просто products = [] если не нужно ничего выводить при пустом запросе
+        
+
+    context = {
+        'products': products,
+        'query': query, 
+    }
+    return render(request, 'products/search_results.html', context)
