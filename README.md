@@ -71,7 +71,7 @@ The application uses Django's MVT (Model-View-Template) architecture:
 - Use the update function to refresh all product information
 - Each update creates a new price history entry
 
-### Search product
+### Search Products
 
 - Use the search bar to find products by name or URL
 - The search results will display matching products with their current prices
