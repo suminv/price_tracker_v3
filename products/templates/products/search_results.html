@@ -13,7 +13,7 @@
         <ul>
             {% for product in products %}
             <li>
-        <a href="{{ product.product_url }}" target="_blank" rel="noopener noreferrer">{{ product.name }} - {{ product.price }} €. </a> 
+        <a href="{{ product.product_url }}" target="_blank" rel="noopener noreferrer">{{ product.name }}</a> 
             </li>
         {% endfor %}
         </ul>
@@ -30,7 +30,3 @@
 {% endblock %}
 
 
-{% block extra_js %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static 'js/price_history_chart.js' %}"></script>
-{% endblock %}
